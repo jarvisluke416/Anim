@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Langellic Design Tool</title>
+<link rel="stylesheet" type="text/css" href="anim.css" />
+</head>
+<body>
+<h3>Langellic Design Tool</h3>
+<button id="addPreviewBtn">➕ Add Preview Window</button>
+<div id="previewContainer"></div>
+
+<!-- Animation Player Section -->
+<div id="animationSection">
+  <h4>🎞 Animation Playback</h4>
+  <div id="animationPlayer">No frames yet.</div>
+  <div style="margin-top:10px; display:flex; align-items:center;">
+    <button id="playBtn">▶ Play</button>
+    <label id="speedControl"> Speed: 
+      <input type="range" id="speedSlider" min="100" max="2000" step="100" value="800"> 
+      <span id="speedLabel">0.8s/frame</span>
+    </label>
+  </div>
+</div>
+<script src="anim/anim.js"></script>
+</body>
+</html>
