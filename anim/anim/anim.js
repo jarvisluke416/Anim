@@ -5,18 +5,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const speedSlider = document.getElementById('speedSlider');
   const speedLabel = document.getElementById('speedLabel');
 
-  let playing = false, playInterval = null, currentFrame = 0, frameDelay = 800;
+  let playing = false, playInterval = null, currentFrame = 0, frameDelay = 1000; // Default delay of 1 second
 
   speedSlider.addEventListener('input', () => {
     frameDelay = parseInt(speedSlider.value);
-    speedLabel.textContent = (frameDelay / 1000).toFixed(1) + 's/frame';
-    if (playing) restartPlayback();
+    speedLabel.textContent = (frameDelay / 1000).toFixed(1) + 's/frame'; // Display seconds in label
+    if (playing) restartPlayback(); // Restart playback if already playing
   });
 
   function addPreview() {
     const section = document.createElement('div');
     section.className = 'accordion-section';
-
+    
     const header = document.createElement('div');
     header.className = 'accordion-header';
     const title = document.createElement('h4');
@@ -228,42 +228,41 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  let lastFrameTime = 0; // Track the last time a frame was rendered
+  let lastFrameTime = 0;
 
-function playAnimation() {
-  const previews = Array.from(previewContainer.querySelectorAll('.preview'));
-  if (previews.length === 0) return;
+  function playAnimation() {
+    const previews = Array.from(previewContainer.querySelectorAll('.preview'));
+    if (previews.length === 0) return;
 
-  playing = true;
-  playBtn.textContent = '⏹ Stop';
-  currentFrame = 0;
+    playing = true;
+    playBtn.textContent = '⏹ Stop';
+    currentFrame = 0;
 
-  function renderFrame(timestamp) {
-    if (!lastFrameTime) lastFrameTime = timestamp;  // Initialize the first frame time
+    function renderFrame(timestamp) {
+      if (!lastFrameTime) lastFrameTime = timestamp;
 
-    const timeDifference = timestamp - lastFrameTime;
+      const timeDifference = timestamp - lastFrameTime;
 
-    if (timeDifference >= frameDelay) {
-      animationPlayer.innerHTML = '';  // Clear previous frame
-      const frame = previews[currentFrame].cloneNode(true);
-      frame.classList.add('frameFade');
-      frame.style.position = 'absolute';
-      frame.style.top = 0;
-      frame.style.left = 0;
-      animationPlayer.appendChild(frame);
+      if (timeDifference >= frameDelay) {
+        animationPlayer.innerHTML = '';
+        const frame = previews[currentFrame].cloneNode(true);
+        frame.classList.add('frameFade');
+        frame.style.position = 'absolute';
+        frame.style.top = 0;
+        frame.style.left = 0;
+        animationPlayer.appendChild(frame);
 
-      lastFrameTime = timestamp; // Update the last frame time
-      currentFrame = (currentFrame + 1) % previews.length; // Move to the next frame
+        lastFrameTime = timestamp;
+        currentFrame = (currentFrame + 1) % previews.length;
+      }
+
+      if (playing) {
+        requestAnimationFrame(renderFrame);
+      }
     }
 
-    if (playing) {
-      requestAnimationFrame(renderFrame);  // Recursively call the renderFrame function
-    }
+    requestAnimationFrame(renderFrame);
   }
-
-  requestAnimationFrame(renderFrame);
-}
-
 
   playBtn.addEventListener('click', () => {
     if (!playing) playAnimation();
